@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+
 
 @Component({
   selector: 'app-login-form',
@@ -14,7 +16,7 @@ export class LoginFormComponent {
     password: ''
   };
 
-  constructor( private authService: AuthService) { }
+  constructor( private authService: AuthService, private router: Router) { }
   // Método para manejar el login
   onLogin(): void {
     this.authService.login(this.user.email, this.user.password).subscribe({
@@ -22,9 +24,12 @@ export class LoginFormComponent {
         console.log('Login exitoso:', response);
         // Aquí puedes almacenar el token en localStorage o manejar la redirección
         localStorage.setItem('authToken', response.token);
+
+        this.router.navigate(['/news'])
       },
       error: (error) => {
         console.error('Error de autenticación:', error);
+        alert('Error de autenticación')
       }
     });
   }
