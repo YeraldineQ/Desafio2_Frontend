@@ -1,19 +1,14 @@
 <div class="pt-20 dark:bg-[#0f1629]">
 <section class="container mx-auto my-0  border border-gray-300 p-4 rounded-lg w-full sm:w-1/2 md:w-2/3 lg:w-3/4 dark:bg-[#283446]">
   <div class="mb-3">
-    <input [(ngModel)]="filters.name" type="text" class="w-full p-3 border rounded dark:bg-[#283446]"
+    <input type="text" class="w-full p-3 border rounded dark:bg-[#283446]"
     placeholder="{{ 'formSearch.placeHolder' | transloco }}">
   </div>
-  <!--<div class="flex items-center space-x- mb-4 dark:text-[#a8afc4]">
-    <label for="start-date" class="block">{{ 'formSearch.date' | transloco }}</label>
-    <input type="date" class="p-3 border rounded dark:bg-[#283446]" id="start-date">
-    <span>-</span>
-    <input type="date" class="p-3 border rounded dark:bg-[#283446]" id="end-date">
-  </div>-->
+  
   <div class="flex items-center space-x-4 mb-4 dark:text-[#a8afc4]">
     <div class="w-1/3">
       <label class="block">{{ 'formSearch.location' | transloco }}</label>
-      <select [(ngModel)]="filters.location" class="w-full p-3 border rounded dark:bg-[#283446]">
+      <select [(ngModel)]="filters.idRegion" class="w-full p-3 border rounded dark:bg-[#283446]">
         <option *ngFor="let location of locations" [value]="location.id">
           {{ location.region }}
       </option>
@@ -21,14 +16,14 @@
     </div>
     <div class="w-1/3">
       <label class="block">Categoría</label>
-      <select [(ngModel)]="filters.category" class="w-full p-3 border rounded dark:bg-[#283446]"> 
+      <select [(ngModel)]="filters.idCategoria" class="w-full p-3 border rounded dark:bg-[#283446]"> 
         <option *ngFor="let category of categories" [value]="category.id">
           {{ category.categoria }}
       </select>
     </div>
     <div class="w-1/3">
       <label class="block">Instituciones</label>
-      <select [(ngModel)]="filters.institucion" class="w-full p-3 border rounded dark:bg-[#283446]">
+      <select [(ngModel)]="filters.idInstitucion" class="w-full p-3 border rounded dark:bg-[#283446]">
         <option *ngFor="let institucion of instituciones" [value]="institucion.id">
           {{ institucion.nombre }}
       </select>

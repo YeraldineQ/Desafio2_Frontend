@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class OpportunityCardComponent {
   @Input() title: string = '';
   @Input() url: string = '';
-
+  @Input() description: string = '';
  
 
 }
