@@ -7,16 +7,9 @@
       {{ 'register.heading' | transloco }}
       <span class="text-2xl font-medium text-blue-900 dark:text-[#12a6e8]">oportunidad?</span>
     </h2>
-    <div class="flex justify-between mb-5">
-      <button class="flex items-center justify-center w-1/2 p-3 text-white bg-[#4285f4] rounded-lg gap-x-2">
-        <img src="https://img.icons8.com/3d-fluency/94/google-logo.png" alt="Google Logo" class="h-5">
-        {{ 'register.loginWithGoogle' | transloco }}
-      </button>
-      <button class="flex items-center justify-center w-1/2 p-3 text-white bg-blue-600 rounded-lg gap-x-2">
-        <img src="https://img.icons8.com/fluency/48/facebook-new.png" alt="Facebook Logo" class="h-5">
-        {{ 'register.loginWithFacebook' | transloco }}
-      </button>
-    </div>
+
+    <app-social-login></app-social-login>
+
     <div class="sm:items-center sm:justify-center sm:px-16 dark:text-[#a8afc4]">
       <form (ngSubmit)="onRegister()">
       <div class="mb-5">
