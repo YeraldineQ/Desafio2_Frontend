@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@jsverse/transloco": "^7.4.3",
+    "angular-anti": "file:",
     "rxjs": "~7.8.0",
     "swiper": "^11.1.9",
     "tslib": "^2.3.0",
