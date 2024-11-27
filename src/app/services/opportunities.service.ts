@@ -18,7 +18,7 @@ export class OpportunitiesService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get(this.apiUrl);
+    return this.http.get(`${this.apiUrl}/oportunidades`);
 
   }
 

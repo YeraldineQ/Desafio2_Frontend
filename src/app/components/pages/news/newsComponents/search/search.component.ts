@@ -3,88 +3,127 @@ import { CategoryService } from 'src/app/services/category.service';
 import { InstitucionesService } from 'src/app/services/instituciones.service';
 import { LocationService } from 'src/app/services/location.service';
 import { OpportunitiesService } from 'src/app/services/opportunities.service';
-
+import { DataService } from '../services/data.service';
+import { OpportunityModel } from 'src/app/interfaces/opportunity.inteface';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  styleUrls: ['./search.component.css'],
 })
 export class SearchComponent implements OnInit {
   locations: any[] = [];
   instituciones: any[] = [];
   categories: any[] = [];
-  opportunities: any [] = [];
-
-
+  opportunities: any[] = [];
 
   filters = {
-    idRegion: '',
-    idCategoria: '',
-    idInstitucion: ''
+    idRegion: null,
+    idCategoria: null,
+    idInstitucion: null,
   };
 
-
-
-  constructor (private locationService: LocationService, private institucionesService: InstitucionesService, private categoryService: CategoryService, private opportunitiesService: OpportunitiesService){};
+  constructor(
+    private readonly locationService: LocationService,
+    private readonly institucionesService: InstitucionesService,
+    private readonly categoryService: CategoryService,
+    private readonly opportunitiesService: OpportunitiesService,
+    private readonly dataService: DataService
+  ) {}
 
   ngOnInit(): void {
     this.loadLocation();
     this.loadInstituciones();
     this.loadCategories();
-    }
+    this.onFilter();
+  }
 
   loadLocation(): void {
     this.locationService.getLocations().subscribe({
       next: (response: any) => {
-        console.log('Ubicaciones:', response);
-        this.locations= response;
+        this.locations = response;
       },
-      error: (error: { message: string; }) => {
+      error: (error) => {
         console.error('Error al cargar ubicaciones:', error);
-        
-      }
+      },
     });
   }
 
   loadInstituciones(): void {
     this.institucionesService.getInstituciones().subscribe({
       next: (response: any) => {
-        console.log('Instituciones:', response);
-        this.instituciones= response;
+        this.instituciones = response;
       },
-      error: (error: { message: string; }) => {
+      error: (error) => {
         console.error('Error al cargar instituciones:', error);
-        
-      }
+      },
     });
   }
+
   loadCategories(): void {
-  this.categoryService.getCategories().subscribe({
-    next: (response: any) => {
-      console.log('Categoría:', response);
-      this.categories= response;
-    },
-    error: (error: { message: string; }) => {
-      console.error('Error al cargar Categoría:', error);  
-    }
-  });
+    this.categoryService.getCategories().subscribe({
+      next: (response: any) => {
+        this.categories = response;
+      },
+      error: (error) => {
+        console.error('Error al cargar Categoría:', error);
+      },
+    });
   }
 
-    //Método para filtrar oportunidades
-    onFilter(): void{
-     // alert('Si trae la información: ' + this.filters.name + "\n" + "region " + this.filters.location + "\n" + "categoria " + this.filters.category + "\n" + "institución " + this.filters.institucion);
-      this.opportunitiesService.filtrarOportunidades(this.filters).subscribe({
+  onFilter(): void {
+    // Solo enviar filtros si tienen valores válidos
+    const filtersToSend = {
+      idRegion: Number(this.filters.idRegion),
+      idCategoria: Number(this.filters.idCategoria),
+      idInstitucion: Number(this.filters.idInstitucion),
+    };
+
+    // Verificar si hay algún filtro seleccionado
+    const hasFilters = Object.values(filtersToSend).some(
+      (value) => value !== 0
+    );
+
+    console.log(hasFilters);
+
+    if (!hasFilters) {
+      // Si no hay filtros, cargar todas las oportunidades
+      this.opportunitiesService.getOpportunities().subscribe({
         next: (response: any) => {
-          console.log('Oportunidades filtradas: ', response);
           this.opportunities = response;
+          this.dataService.updateData(this.opportunities);
+          console.log(this.opportunities);
         },
-        error: (error: { message: string; }) => {
-          console.error('Error al cargar las oportunidades filtradas: ', error);
-        }
+        error: (error) => {
+          console.error('Error al cargar oportunidades:', error);
+        },
       });
+      return;
     }
 
+    const findData = this.opportunities.map((item: OpportunityModel) => {
+      return {
+        id: item.id,
+        descripcion: item.descripcion,
+        tipoOportunidad: item.tipoOportunidad.id,
+        estadoOportunidad: item.estadoOportunidad.id,
+        informacionOportunidad: item.informacionOportunidad.id,
+        categoriaOportinidad: item.categoriaOportinidad.id,
+        institucionOportunidad: item.institucionOportunidad[0],
+        userOportunidad: item.userOportunidad[0].id,
+      };
+    });
 
+    console.log(findData);
 
+    const filteredItems = findData.filter((item) =>
+        filtersToSend.idRegion === item.institucionOportunidad.idRegion.id &&
+        filtersToSend.idCategoria === item.categoriaOportinidad &&
+        filtersToSend.idInstitucion === item.institucionOportunidad.id
+    );
+
+    console.log(filteredItems);
+    this.opportunities = filteredItems;
+    this.dataService.updateData(this.opportunities);
+  }
 }
